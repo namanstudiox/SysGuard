@@ -18,15 +18,16 @@
     "dist:all": "npm run dist:win && npm run dist:linux"
   },
   "dependencies": {
+    "package.json": "^2.0.1",
     "systeminformation": "^5.26.0"
   },
   "devDependencies": {
     "electron": "^33.2.0",
     "electron-builder": "^25.1.8"
   },
-  "homepage": "https://github.com/yourname/sysguard",
+  "homepage": "https://github.com/namanstudiox/SysGuard",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourname/sysguard.git"
+    "url": "https://github.com/namanstudiox/SysGuard.git"
   }
 }
