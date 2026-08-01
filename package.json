@@ -1,0 +1,32 @@
+{
+  "name": "sysguard",
+  "productName": "SysGuard",
+  "version": "1.0.2",
+  "description": "Full system diagnostics, real-time monitoring and automated security reports for Windows & Linux.",
+  "main": "app.js",
+  "author": "SysGuard",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "start:nosandbox": "electron . --no-sandbox",
+    "test:diag": "node tests/run-diag.js",
+    "test:security": "node tests/run-security.js",
+    "test:report": "node tests/run-report.js",
+    "dist:win": "electron-builder --win nsis --x64",
+    "dist:linux": "electron-builder --linux AppImage deb --x64",
+    "dist:all": "npm run dist:win && npm run dist:linux"
+  },
+  "dependencies": {
+    "systeminformation": "^5.26.0"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "homepage": "https://github.com/yourname/sysguard",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourname/sysguard.git"
+  }
+}

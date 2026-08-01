@@ -1,0 +1,59 @@
+# SysGuard packaging configuration (electron-builder)
+appId: com.sysguard.app
+productName: SysGuard
+copyright: Copyright © 2026 SysGuard
+
+directories:
+  output: release
+  buildResources: assets
+
+files:
+  - app.js
+  - preload.js
+  - renderer/**
+  - src/**
+  - assets/icon.png
+  - package.json
+
+asar: true
+
+# ---------- Windows ----------
+win:
+  icon: assets/icon.png
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: ${productName}-Setup-${version}-win-x64.${ext}
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: SysGuard
+
+# ---------- Linux ----------
+linux:
+  icon: assets/icon.png
+  category: Utility
+  synopsis: System diagnostics, monitoring and automated security reports
+  description: >-
+    SysGuard runs full system diagnostics, provides real-time monitoring of
+    CPU, memory, disk, network and temperature, and produces automated
+    security reports (local audit + network checks) on a schedule.
+  target:
+    - target: AppImage
+      arch:
+        - x64
+    - target: deb
+      arch:
+        - x64
+  maintainer: SysGuard <sysguard@example.com>
+  artifactName: ${productName}-${version}-linux-x64.${ext}
+
+deb:
+  afterInstall: scripts/after-install.sh
+
+npmRebuild: false

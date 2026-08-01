@@ -1,0 +1,66 @@
+# SysGuard — automatic release builds
+# Push a tag like v1.0.0 and this builds everything and attaches it to a
+# GitHub Release:
+#   · Windows → SysGuard-Setup-<ver>-win-x64.exe (NSIS installer) + portable zip
+#   · Linux   → SysGuard-<ver>-linux-x64.AppImage + .deb
+#   · macOS   → optional .dmg (delete that matrix entry if you don't need it)
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:          # also runnable manually from the Actions tab
+
+permissions:
+  contents: write             # required so the upload step can create the Release
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Windows artifacts are built natively on a Windows runner
+          - os: windows-latest
+            args: --win nsis zip
+          # Linux artifacts are built natively on Linux
+          - os: ubuntu-latest
+            args: --linux AppImage deb
+          # macOS (optional) — delete this entry if you don't need a .dmg
+          - os: macos-latest
+            args: --mac dmg
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build packages
+        run: npx electron-builder ${{ matrix.args }} --x64 -p never
+        env:
+          ELECTRON_BUILDER_CACHE: ${{ runner.temp }}/electron-cache
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/*.AppImage
+            release/*.deb
+            release/*.exe
+            release/*.zip
+            release/*.dmg
+            release/*.yml
+            release/*.blockmap
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
